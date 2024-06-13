@@ -1,0 +1,41 @@
+﻿
+@using Management.Services
+@page "/machines"
+@rendermode InteractiveServer
+ @* @inject NavigationManager Navigation *@
+@inject MachineService MachineService
+
+<h3>Machine List</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Status</th>
+            <th>Latest data</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var machine in MachineService.GetMachines())
+        {
+            <tr>
+                <td>@machine.Name</td>
+                <td>@machine.Id</td>
+                <td>@(machine.IsOnline ? "Online" : "Offline")</td>
+                <td>@machine.LastData</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => SendData(machine.Id)">Send data</button> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private async Task SendData(Guid id)
+    {
+        MachineService.SendDataToMachine(id, "New data from admin");
+
+     }
+}

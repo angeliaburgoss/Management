@@ -1,0 +1,37 @@
+﻿@using Management.Models
+@using Management.Services
+@inject MachineService MachineService
+@implements IDisposable
+
+<div class="statistics">
+    <h3>Statistics</h3>
+    <p>Total number of machines: @MachineService.GetMachines().Count</p>
+    <p>Number of machines online: @MachineService.GetMachines().Count(m => m.IsOnline)</p>
+    <p>Last edited machine: @lastEditedMachineName</p>
+</div>
+
+@code {
+    private string lastEditedMachineName;
+
+    protected override void OnInitialized()
+    {
+        MachineService.MachineDataSent += OnMachineDataSent;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        MachineService.MachineDataSent += OnMachineDataSent;
+    }
+
+
+    private void OnMachineDataSent(Machine machine)
+    {
+        lastEditedMachineName = machine.Name;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        MachineService.MachineDataSent -= OnMachineDataSent;
+    }
+}
