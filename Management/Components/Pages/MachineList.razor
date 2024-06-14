@@ -34,7 +34,7 @@
                 <td>@machine.LastData</td>
                 <td>
                     <button class="btn btn-primary" @onclick="() => SendData(machine.Id)">Send data</button> 
-                    <button class="btn btn-primary" @onclick="() =>SendData(machine.Id)">Remove</button>
+                    <button class="btn btn-primary" @onclick="() => RemoveMachine(machine.Id)">Remove</button>
                     <button class="btn btn-primary" @onclick="() => StartMachine(machine.Id)" disabled="@(machine.IsOnline)">Start</button>
                     <button class="btn btn-primary" @onclick="() => StopMachine(machine.Id)" disabled="@(machine.IsOnline == false)">Stop</button>
                 </td>
