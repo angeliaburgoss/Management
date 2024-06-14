@@ -1,4 +1,10 @@
 ﻿using Management.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+
 
 namespace Management.Services
 {
@@ -27,6 +33,27 @@ namespace Management.Services
             {
                 machine.LastData = data;
                 MachineDataSent?.Invoke(machine);
+            }
+        }
+
+        public async Task AddMachine(string name)
+        {
+            var newMachine = new Machine
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                IsOnline = false,
+                LastData = string.Empty
+            };
+            Machines.Add(newMachine);
+        }
+
+        public async Task RemoveMachine(Guid id)
+        {
+            var machine = Machines.FirstOrDefault(m => m.Id == id);
+            if (machine != null)
+            {
+                Machines.Remove(machine);
             }
         }
     }

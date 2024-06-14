@@ -1,11 +1,19 @@
-﻿
+﻿@using Management.Models
 @using Management.Services
 @page "/machines"
 @rendermode InteractiveServer
  @* @inject NavigationManager Navigation *@
 @inject MachineService MachineService
 
+
 <h3>Machine List</h3>
+
+<div>
+    <h4>Add new Machine</h4>
+    <input type="text" @bind="newMachineName" placeholder="Name" />
+    <button class="btn btn-primary" @onclick="AddMachine">Add</button>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,6 +34,7 @@
                 <td>@machine.LastData</td>
                 <td>
                     <button class="btn btn-primary" @onclick="() => SendData(machine.Id)">Send data</button> 
+                    <button class="btn btn-primary" @onclick="() =>SendData(machine.Id)">Remove</button>
                 </td>
             </tr>
         }
@@ -33,9 +42,33 @@
 </table>
 
 @code {
+    private List<Machine> machines;
+    private string newMachineName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        machines = MachineService.GetMachines();
+    }
+
+    private async Task AddMachine()
+    {
+        if (!string.IsNullOrEmpty(newMachineName))
+        {
+            await MachineService.AddMachine(newMachineName);
+            machines = MachineService.GetMachines();
+            newMachineName = string.Empty; // Reset input field
+        }
+    }
+
+    private async Task RemoveMachine(Guid id)
+    {
+        await MachineService.RemoveMachine(id);
+        machines = MachineService.GetMachines();
+    }
+
     private async Task SendData(Guid id)
     {
-        MachineService.SendDataToMachine(id, "New data from admin");
-
-     }
+        await MachineService.SendDataToMachine(id, "New data from admin");
+        machines = MachineService.GetMachines();
+    }
 }
