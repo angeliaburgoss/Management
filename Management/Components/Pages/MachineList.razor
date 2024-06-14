@@ -25,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var machine in MachineService.GetMachines())
+        @foreach (var machine in machines)
         {
             <tr>
                 <td>@machine.Name</td>
@@ -35,6 +35,8 @@
                 <td>
                     <button class="btn btn-primary" @onclick="() => SendData(machine.Id)">Send data</button> 
                     <button class="btn btn-primary" @onclick="() =>SendData(machine.Id)">Remove</button>
+                    <button class="btn btn-primary" @onclick="() => StartMachine(machine.Id)" disabled="@(machine.IsOnline)">Start</button>
+                    <button class="btn btn-primary" @onclick="() => StopMachine(machine.Id)" disabled="@(machine.IsOnline == false)">Stop</button>
                 </td>
             </tr>
         }
@@ -69,6 +71,18 @@
     private async Task SendData(Guid id)
     {
         await MachineService.SendDataToMachine(id, "New data from admin");
+        machines = MachineService.GetMachines();
+    }
+
+    private async Task StartMachine(Guid id)
+    {
+        await MachineService.StartMachine(id);
+        machines = MachineService.GetMachines();
+    }
+
+    private async Task StopMachine(Guid id)
+    {
+        await MachineService.StopMachine(id);
         machines = MachineService.GetMachines();
     }
 }

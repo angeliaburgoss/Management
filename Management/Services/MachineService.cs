@@ -50,5 +50,23 @@ namespace Management.Services
                 Machines.Remove(machine);
             }
         }
+
+        public async Task StartMachine(Guid id)
+        {
+            var machine = Machines.FirstOrDefault(m => m.Id == id);
+            if (machine != null)
+            {
+                machine.IsOnline = true;
+            }
+        }
+
+        public async Task StopMachine(Guid id)
+        {
+            var machine = Machines.FirstOrDefault(m => m.Id == id);
+            if (machine != null)
+            {
+                machine.IsOnline = false;
+            }
+        }
     }
 }
